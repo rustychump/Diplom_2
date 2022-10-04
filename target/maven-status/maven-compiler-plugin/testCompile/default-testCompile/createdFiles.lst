@@ -1,0 +1,5 @@
+TestLoginUser.class
+TestCreateUser.class
+TestGetUserOrders.class
+TestChangingUserData.class
+TestCreateOrder.class

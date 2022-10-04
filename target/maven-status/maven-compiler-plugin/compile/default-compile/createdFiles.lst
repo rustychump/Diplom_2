@@ -1,0 +1,6 @@
+cards\ResponseAuthUserCard.class
+cards\CreateUserCard.class
+cards\CreateUserWithoutPasswordCard.class
+cards\UserCard.class
+cards\CreateUserWithoutNameCard.class
+cards\CreateUserWithoutEmailCard.class

@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+Test set: TestLoginUser
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.719 s <<< FAILURE! - in TestLoginUser
+loginUserWithIncorrectEmailAndPassword(TestLoginUser)  Time elapsed: 0.709 s  <<< FAILURE!
+java.lang.AssertionError: 
+1 expectation failed.
+Expected status code <401> but was <429>.
+
+	at TestLoginUser.loginUserWithIncorrectEmailAndPassword(TestLoginUser.java:53)
+
