@@ -1,21 +1,13 @@
 import cards.*;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class TestCreateUser {
-
-    CreateUserCard createUserCard = new CreateUserCard("matest@yandex.ru", "password", "username");
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
-    }
+public class TestCreateUser extends BaseTest {
 
     @Test
     @DisplayName("Создание уникального пользователя")
@@ -25,8 +17,8 @@ public class TestCreateUser {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post("/api/auth/register")
-                .then().statusCode(200)
+                .post(endpointAuthRegister)
+                .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("user", notNullValue())
                 .body("accessToken", notNullValue())
@@ -40,14 +32,14 @@ public class TestCreateUser {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post("/api/auth/register");
+                .post(endpointAuthRegister);
 
         given()
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post("/api/auth/register")
-                .then().statusCode(403)
+                .post(endpointAuthRegister)
+                .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("User already exists"));
     }
@@ -61,8 +53,8 @@ public class TestCreateUser {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutEmailCard)
                 .when()
-                .post("/api/auth/register")
-                .then().statusCode(403)
+                .post(endpointAuthRegister)
+                .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
     }
@@ -76,8 +68,8 @@ public class TestCreateUser {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutPasswordCard)
                 .when()
-                .post("/api/auth/register")
-                .then().statusCode(403)
+                .post(endpointAuthRegister)
+                .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
     }
@@ -91,25 +83,14 @@ public class TestCreateUser {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutNameCard)
                 .when()
-                .post("/api/auth/register")
-                .then().statusCode(403)
+                .post(endpointAuthRegister)
+                .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 
-    @After
-    public void deleteTestData() {
-        try {
-            ResponseAuthUserCard responseAuthUserCard = given()
-                    .header("Content-type", "application/json")
-                    .body(createUserCard)
-                    .when()
-                    .post("/api/auth/login")
-                    .body().as(ResponseAuthUserCard.class);
-
-            given()
-                    .auth().oauth2(responseAuthUserCard.getAccessToken().substring(7))
-                    .delete("/api/auth/user");
-        } catch (NullPointerException exception) { }
+    @Override
+    public void setUp() {
+        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
     }
 }
