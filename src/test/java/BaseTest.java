@@ -7,10 +7,11 @@ import org.junit.Before;
 import static io.restassured.RestAssured.given;
 
 public abstract class BaseTest {
-    public static final String endpointAuthUser = "/api/auth/user";
-    public static final String endpointAuthLogin = "/api/auth/login";
-    public static final String endpointAuthRegister = "/api/auth/register";
-    public static final String endpointOrders = "/api/orders";
+
+    public static final String ENDPOINT_AUTH_USER = "/api/auth/user";
+    public static final String ENDPOINT_AUTH_LOGIN = "/api/auth/login";
+    public static final String ENDPOINT_AUTH_REGISTER = "/api/auth/register";
+    public static final String ENDPOINT_ORDERS = "/api/orders";
     protected CreateUserCard createUserCard = new CreateUserCard("matest@yandex.ru", "password", "username");
 
     protected ResponseAuthUserCard getResponseAuthUserCard(CreateUserCard userCard) {
@@ -19,7 +20,7 @@ public abstract class BaseTest {
                 .header("Content-type", "application/json")
                 .body(userCard)
                 .when()
-                .post(endpointAuthLogin)
+                .post(ENDPOINT_AUTH_LOGIN)
                 .body().as(ResponseAuthUserCard.class);
     }
 
@@ -31,7 +32,7 @@ public abstract class BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post(endpointAuthRegister);
+                .post(ENDPOINT_AUTH_REGISTER);
     }
 
     @After
@@ -39,7 +40,7 @@ public abstract class BaseTest {
         try {
             given()
                     .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
-                    .delete(endpointAuthUser);
+                    .delete(ENDPOINT_AUTH_USER);
         } catch (NullPointerException exception) { }
     }
 }

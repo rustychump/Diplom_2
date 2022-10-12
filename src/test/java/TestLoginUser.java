@@ -16,7 +16,7 @@ public class TestLoginUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post(endpointAuthLogin)
+                .post(ENDPOINT_AUTH_LOGIN)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("accessToken", notNullValue())
@@ -34,7 +34,7 @@ public class TestLoginUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createWrongUserCard)
                 .when()
-                .post(endpointAuthLogin)
+                .post(ENDPOINT_AUTH_LOGIN)
                 .then().statusCode(SC_UNAUTHORIZED)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));

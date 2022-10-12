@@ -12,7 +12,7 @@ public class TestGetUserOrders extends BaseTest {
     public void getUserOrdersWithoutAuth() {
 
         given()
-                .get(endpointOrders)
+                .get(ENDPOINT_ORDERS)
                 .then().statusCode(SC_UNAUTHORIZED)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
@@ -25,7 +25,7 @@ public class TestGetUserOrders extends BaseTest {
         given()
                 .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
                 .when()
-                .get(endpointOrders)
+                .get(ENDPOINT_ORDERS)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("orders", notNullValue())

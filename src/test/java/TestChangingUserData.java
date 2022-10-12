@@ -17,7 +17,7 @@ public class TestChangingUserData extends BaseTest {
                 .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
                 .body(changedUserCard)
                 .when()
-                .patch(endpointAuthUser)
+                .patch(ENDPOINT_AUTH_USER)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("user.email", equalTo("matest1@yandex.ru"))
@@ -32,7 +32,7 @@ public class TestChangingUserData extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(changedUserCard)
                 .when()
-                .patch(endpointAuthUser)
+                .patch(ENDPOINT_AUTH_USER)
                 .then().statusCode(SC_UNAUTHORIZED)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
@@ -43,12 +43,12 @@ public class TestChangingUserData extends BaseTest {
         try {
             given()
                     .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
-                    .delete(endpointAuthUser);
+                    .delete(ENDPOINT_AUTH_USER);
         } catch (NullPointerException exception) { }
         try {
             given()
                     .auth().oauth2(getResponseAuthUserCard(changedUserCard).getAccessToken().substring(7))
-                    .delete(endpointAuthUser);
+                    .delete(ENDPOINT_AUTH_USER);
 
         } catch (NullPointerException exception) { }
     }

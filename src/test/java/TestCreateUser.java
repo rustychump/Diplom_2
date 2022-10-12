@@ -17,7 +17,7 @@ public class TestCreateUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post(endpointAuthRegister)
+                .post(ENDPOINT_AUTH_REGISTER)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("user", notNullValue())
@@ -32,13 +32,13 @@ public class TestCreateUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post(endpointAuthRegister);
+                .post(ENDPOINT_AUTH_REGISTER);
 
         given()
                 .header("Content-type", "application/json")
                 .body(createUserCard)
                 .when()
-                .post(endpointAuthRegister)
+                .post(ENDPOINT_AUTH_REGISTER)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("User already exists"));
@@ -53,7 +53,7 @@ public class TestCreateUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutEmailCard)
                 .when()
-                .post(endpointAuthRegister)
+                .post(ENDPOINT_AUTH_REGISTER)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -68,7 +68,7 @@ public class TestCreateUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutPasswordCard)
                 .when()
-                .post(endpointAuthRegister)
+                .post(ENDPOINT_AUTH_REGISTER)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -83,7 +83,7 @@ public class TestCreateUser extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(createUserWithoutNameCard)
                 .when()
-                .post(endpointAuthRegister)
+                .post(ENDPOINT_AUTH_REGISTER)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));

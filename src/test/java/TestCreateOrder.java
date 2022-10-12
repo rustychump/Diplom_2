@@ -20,7 +20,7 @@ public class TestCreateOrder extends BaseTest {
                 .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
                 .body(correctOrderBody)
                 .when()
-                .post(endpointOrders)
+                .post(ENDPOINT_ORDERS)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("order.owner.name", equalTo("username"))
@@ -34,7 +34,7 @@ public class TestCreateOrder extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(correctOrderBody)
                 .when()
-                .post(endpointOrders)
+                .post(ENDPOINT_ORDERS)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("name", notNullValue())
@@ -49,7 +49,7 @@ public class TestCreateOrder extends BaseTest {
                 .header("Content-type", "application/json")
                 .body("")
                 .when()
-                .post(endpointOrders)
+                .post(ENDPOINT_ORDERS)
                 .then().statusCode(SC_BAD_REQUEST)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Ingredient ids must be provided"));
@@ -62,7 +62,7 @@ public class TestCreateOrder extends BaseTest {
                 .header("Content-type", "application/json")
                 .body(incorrectOrderBody)
                 .when()
-                .post(endpointOrders)
+                .post(ENDPOINT_ORDERS)
                 .then().statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 }
