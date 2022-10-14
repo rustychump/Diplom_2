@@ -1,7 +1,6 @@
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -11,8 +10,7 @@ public class TestGetUserOrders extends BaseTest {
     @DisplayName("Получение заказов неавторизованного пользователя")
     public void getUserOrdersWithoutAuth() {
 
-        given()
-                .get(ENDPOINT_ORDERS)
+        orderApi.getUserOrderWithoutAuth()
                 .then().statusCode(SC_UNAUTHORIZED)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
@@ -22,10 +20,7 @@ public class TestGetUserOrders extends BaseTest {
     @DisplayName("Получение заказов авторизованного пользователя")
     public void getUserOrdersWithAuth() {
 
-        given()
-                .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
-                .when()
-                .get(ENDPOINT_ORDERS)
+        orderApi.getUserOrderWithAuth(createUserCard)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("orders", notNullValue())

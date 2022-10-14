@@ -2,7 +2,6 @@ import cards.CreateUserCard;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.apache.http.HttpStatus.*;
 
@@ -11,13 +10,7 @@ public class TestChangingUserData extends BaseTest {
     @Test
     @DisplayName("Изменение данных пользователя с авторизацией")
     public void changingUserDataWithAuth() {
-
-        given()
-                .header("Content-type", "application/json")
-                .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
-                .body(changedUserCard)
-                .when()
-                .patch(ENDPOINT_AUTH_USER)
+        userApi.userUpdateWithAuth(createUserCard, changedUserCard)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("user.email", equalTo("matest1@yandex.ru"))
@@ -27,12 +20,7 @@ public class TestChangingUserData extends BaseTest {
     @Test
     @DisplayName("Изменение данных пользователя без авторизации")
     public void changingUserDataWithoutAuth() {
-
-        given()
-                .header("Content-type", "application/json")
-                .body(changedUserCard)
-                .when()
-                .patch(ENDPOINT_AUTH_USER)
+        userApi.userUpdateWithoutAuth(changedUserCard)
                 .then().statusCode(SC_UNAUTHORIZED)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("You should be authorised"));
@@ -41,15 +29,10 @@ public class TestChangingUserData extends BaseTest {
     @Override
     public void deleteTestData() {
         try {
-            given()
-                    .auth().oauth2(getResponseAuthUserCard(createUserCard).getAccessToken().substring(7))
-                    .delete(ENDPOINT_AUTH_USER);
+            userApi.userDelete(createUserCard);
         } catch (NullPointerException exception) { }
         try {
-            given()
-                    .auth().oauth2(getResponseAuthUserCard(changedUserCard).getAccessToken().substring(7))
-                    .delete(ENDPOINT_AUTH_USER);
-
+            userApi.userDelete(changedUserCard);
         } catch (NullPointerException exception) { }
     }
 

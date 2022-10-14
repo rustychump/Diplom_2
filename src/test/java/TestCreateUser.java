@@ -3,7 +3,6 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -12,12 +11,7 @@ public class TestCreateUser extends BaseTest {
     @Test
     @DisplayName("Создание уникального пользователя")
     public void createCorrectUser() {
-
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER)
+        userApi.userRegister(createUserCard)
                 .then().statusCode(SC_OK)
                 .and().assertThat().body("success", equalTo(true))
                 .body("user", notNullValue())
@@ -28,17 +22,9 @@ public class TestCreateUser extends BaseTest {
     @Test
     @DisplayName("Создание пользователя, который уже зарегистрирован")
     public void recreateUser() {
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER);
+        userApi.userRegister(createUserCard);
 
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER)
+        userApi.userRegister(createUserCard)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("User already exists"));
@@ -49,11 +35,7 @@ public class TestCreateUser extends BaseTest {
     public void createUserWithoutEmail() {
         CreateUserWithoutEmailCard createUserWithoutEmailCard = new CreateUserWithoutEmailCard("password", "username");
 
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserWithoutEmailCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER)
+        userApi.userRegister(createUserWithoutEmailCard)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -64,11 +46,7 @@ public class TestCreateUser extends BaseTest {
     public void createUserWithoutPassword() {
         CreateUserWithoutPasswordCard createUserWithoutPasswordCard = new CreateUserWithoutPasswordCard("matest@yandex.ru", "username");
 
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserWithoutPasswordCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER)
+        userApi.userRegister(createUserWithoutPasswordCard)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -79,11 +57,7 @@ public class TestCreateUser extends BaseTest {
     public void createUserWithoutName() {
         CreateUserWithoutNameCard createUserWithoutNameCard = new CreateUserWithoutNameCard("matest@yandex.ru", "password");
 
-        given()
-                .header("Content-type", "application/json")
-                .body(createUserWithoutNameCard)
-                .when()
-                .post(ENDPOINT_AUTH_REGISTER)
+        userApi.userRegister(createUserWithoutNameCard)
                 .then().statusCode(SC_FORBIDDEN)
                 .and().assertThat().body("success", equalTo(false))
                 .body("message", equalTo("Email, password and name are required fields"));
@@ -91,6 +65,6 @@ public class TestCreateUser extends BaseTest {
 
     @Override
     public void setUp() {
-        RestAssured.baseURI = "https://stellarburgers.nomoreparties.site";
+        RestAssured.baseURI = URL_STELLAR_BURGERS;
     }
 }
